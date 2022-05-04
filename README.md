@@ -1,10 +1,14 @@
-# Getting Started with Create React App
+# React Guitar Fretboard
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project was created to be a react version of [Guitar Fretboard Module](https://github.com/swampthang/guitar-fretboard-module).
 
 ## Available Scripts
 
-In the project directory, you can run:
+In the project directory, you need to run:
+
+### `npm install`
+
+then run: 
 
 ### `npm start`
 
@@ -13,11 +17,6 @@ Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
 The page will reload when you make changes.\
 You may also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
 ### `npm run build`
 
