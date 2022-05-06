@@ -1,5 +1,13 @@
-function TopControls({currentScale, lowFret, lowFretChange, topFret, topFretChange, toggleNoteNumbers}) {
+function TopControls({currentScale, lowFret, lowFretChange, topFret, topFretChange, toggleNoteNumbers, setNotesPerChord, doChord}) {
 
+  const handleNotesPerChordBtnClick = (e) => {
+    e.target.parentNode.querySelectorAll('notes-per-chord-button').forEach((btn) => {
+      btn.classList.remove('active')
+    })
+    e.target.classList.add('active')
+    setNotesPerChord(e.target.getAttribute('ctype'))
+    // doChord()
+  }
   return (
     <div className="top-wrapper info-display-div">
   <div className="top-left">
@@ -34,7 +42,7 @@ function TopControls({currentScale, lowFret, lowFretChange, topFret, topFretChan
   <div className="top-right">
     <div className="controller notes-per-chord-wrapper">
       <div className="notesPerChord">
-        <button className="notes-per-chord-button active" ctype="3">basic chords</button>
+        <button onClick={handleNotesPerChordBtnClick} className="notes-per-chord-button active" ctype="3">basic chords</button>
       </div>
       <div className="notesPerChord">
         <button className="notes-per-chord-button" ctype="4">7th chords</button>

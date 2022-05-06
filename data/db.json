@@ -321,32 +321,34 @@
       "Ab": ["Ab", "Bb", "Cb", "Db", "Eb", "Fb", "G"],
       "Db": ["Db", "Eb", "Fb", "Gb", "Ab", "Bbb", "C"]
     },
-    "chordsArr": {
-      "1": [0, 2, 4, 6, 1, "", "<sup>maj7</sup>", "<sup>maj9</sup>"],
-      "2": [1, 3, 5, 0, 2, "<sup>m</sup>", "<sup>m7</sup>", "<sup>m9</sup>"],
-      "3": [2, 4, 6, 1, 3, "<sup>m</sup>", "<sup>m7</sup>", "<sup>m7b9</sup>"],
-      "4": [3, 5, 0, 2, 4, "", "<sup>maj7</sup>", "<sup>maj9</sup>"],
-      "5": [4, 6, 1, 3, 5, "", "7", "9"],
-      "6": [5, 0, 2, 4, 6, "<sup>m</sup>", "<sup>m7</sup>", "<sup>m9</sup>"],
-      "7": [6, 1, 3, 5, 0, "<sup>dim</sup>", "<sup>m7b5</sup>", "<sup>m7b5b9</sup>"]
-    },
-    "naturalMinorChordsArr": {
-      "1": [0, 2, 4, 6, 1, "<sup>m</sup>", "<sup>m7</sup>", "<sup>m9</sup>"],
-      "2": [1, 3, 5, 0, 2, "<sup>dim</sup>", "<sup>m7b5</sup>", "<sup>m7b5b9</sup>"],
-      "3": [2, 4, 6, 1, 3, "", "<sup>maj7</sup>", "<sup>maj9</sup>"],
-      "4": [3, 5, 0, 2, 4, "<sup>m</sup>", "<sup>m7</sup>", "<sup>m9</sup>"],
-      "5": [4, 6, 1, 3, 5, "<sup>m</sup>", "<sup>m7</sup>", "<sup>m7b9</sup>"],
-      "6": [5, 0, 2, 4, 6, "", "<sup>maj7</sup>", "<sup>maj9</sup>"],
-      "7": [6, 1, 3, 5, 0, "", "7", "9"]
-    },
-    "harmonicMinorChordsArr": {
-      "1": [0, 2, 4, 6, 1, "<sup>m</sup>", "<sup>mMaj7</sup>", "<sup>m9#7</sup>"],
-      "2": [1, 3, 5, 0, 2, "<sup>dim</sup>", "<sup>m7b5</sup>", "<sup>m7b5b9</sup>"],
-      "3": [2, 4, 6, 1, 3, "aug", "<sup>maj7#5</sup>", "<sup>maj9#5</sup>"],
-      "4": [3, 5, 0, 2, 4, "<sup>m</sup>", "<sup>m7</sup>", "<sup>m9</sup>"],
-      "5": [4, 6, 1, 3, 5, "<sup></sup>", "<sup>7</sup>", "<sup>7b9</sup>"],
-      "6": [5, 0, 2, 4, 6, "", "<sup>maj7</sup>", "<sup>minMaj7</sup>"],
-      "7": [6, 1, 3, 5, 0, "<sup>dim</sup>", "<sup>dim7</sup>", "<sup>dim7b9</sup>"]
+    "chordsData": {
+      "major": [
+        { "ints": [0, 2, 4, 6, 1], "labels": ["", "maj7", "maj9"]},
+        { "ints": [1, 3, 5, 0, 2], "labels": ["m", "m7", "m9"]},
+        { "ints": [2, 4, 6, 1, 3], "labels": ["m", "m7", "m7b9"]},
+        { "ints": [3, 5, 0, 2, 4], "labels": ["", "maj7", "maj9"]},
+        { "ints": [4, 6, 1, 3, 5], "labels": ["", "7", "9"]},
+        { "ints": [5, 0, 2, 4, 6], "labels": ["m", "m7", "m9"]},
+        { "ints": [6, 1, 3, 5, 0], "labels": ["dim", "m7b5", "m7b5b9"]}
+      ],
+      "naturalMinor": [
+        { "ints": [0, 2, 4, 6, 1], "labels": ["", "maj7", "maj9"]},
+        { "ints": [1, 3, 5, 0, 2], "labels": ["m", "m7", "m9"]},
+        { "ints": [2, 4, 6, 1, 3], "labels": ["m", "m7", "m7b9"]},
+        { "ints": [3, 5, 0, 2, 4], "labels": ["", "maj7", "maj9"]},
+        { "ints": [4, 6, 1, 3, 5], "labels": ["", "7", "9"]},
+        { "ints": [5, 0, 2, 4, 6], "labels": ["m", "m7", "m9"]},
+        { "ints": [6, 1, 3, 5, 0], "labels": ["dim", "m7b5", "m7b5b9"]}
+      ],
+      "harmonicMinor": [
+        { "ints": [0, 2, 4, 6, 1], "labels": ["m", "mMaj7", "m9#7"]},
+        { "ints": [1, 3, 5, 0, 2], "labels": ["dim", "m7b5", "m7b5b9"]},
+        { "ints": [2, 4, 6, 1, 3], "labels": ["aug", "maj7#5", "maj9#5"]},
+        { "ints": [3, 5, 0, 2, 4], "labels": ["m", "m7", "m9"]},
+        { "ints": [4, 6, 1, 3, 5], "labels": ["", "7", "7b9"]},
+        { "ints": [5, 0, 2, 4, 6], "labels": ["", "maj7", "minMaj7"]},
+        { "ints": [6, 1, 3, 5, 0], "labels": ["dim", "dim7", "dim7b9"]}
+      ]
     }
   }
 }

@@ -24,13 +24,14 @@ function NeckModule({prefs}) {
   const [scaleNeedsUpdate, setScaleNeedsUpdate] = useState(false)
   const [notes, setNotes] = useState(data ? data.notes : [])
   const [showScaleOnly, setShowScaleOnly] = useState(true)
+  const [notesPerChord, setNotesPerChord] = useState(5)
   const [currentScaleType, setCurrentScaleType] = useState(prefs.currentScaleType ? prefs.currentScaleType : 'majorScales')
   const [currentScale, setCurrentScale] = useState(prefs.currentScale ? prefs.currentScale : ["C", "D", "E", "F", "G", "A", "B"])
 
   const initCurrentScale = function() {
     
     switch( currentScaleType ) {
-      case 'Major':
+      case 'majorScales':
       case 'Major Scales':
         setCurrentScale(currentScale => (data.majorScales[rootNote]))
       break;
@@ -58,6 +59,36 @@ function NeckModule({prefs}) {
     initCurrentScale()
     setScaleNeedsUpdate(false)
     setKeyHasChanged(true)
+  }
+
+  const doChord = ({chordRoot,ints}) => {
+    // currentScale is known
+    // notesPerChord is known
+    // ints is the array of notes to be picked from the currentScale
+    console.log(currentScale)
+    console.log(notesPerChord)
+    console.log(chordRoot)
+    console.log(ints)
+    if( data.notes ) {
+      // first mute em all
+      document.querySelectorAll('.note.in-scale').forEach((note) => {
+        note.className = note.className.split('in-scale')[0] + 'note';
+        note.classList.add('muted');
+        note.classList.add('in-scale');
+      })
+      let int = 1;
+      for( let i = 0; i < notesPerChord; i++ ) {
+
+        let notename = currentScale[ints[i]];
+
+        document.querySelectorAll(`.note[notename="${notename}"`).forEach((note) => {
+          note.classList.add(`int-${int}`)
+          note.querySelector('span.int-num').textContent = int;
+          note.classList.remove('muted')
+        })
+        int += 2;
+      }
+    }
   }
 
   const doNotes = () => {
@@ -166,7 +197,16 @@ function NeckModule({prefs}) {
         <div className="scale-only-link-wrapper">
           <button className="refresh-scale-link">Show entire scale</button>
         </div>
-        <TopControls lowFret={lowFret} topFret={topFret} lowFretChange={handleLowFretChange} topFretChange={handleTopFretChange} currentScale={currentScale} toggleNoteNumbers={toggleNoteNumbers} />
+        <TopControls 
+        lowFret={lowFret} 
+        topFret={topFret} 
+        lowFretChange={handleLowFretChange} 
+        topFretChange={handleTopFretChange} 
+        currentScale={currentScale} 
+        toggleNoteNumbers={toggleNoteNumbers}
+        setNotesPerChord={setNotesPerChord}
+        doChord={doChord}
+        />
         { isPending && <div className='loading-msg'><h2>Loading notes...</h2></div> }
         { 
           data && 
@@ -178,7 +218,7 @@ function NeckModule({prefs}) {
           /> 
         }
         <div className="controller info-display-div chord-instructions">Use buttons below to display corresponding chord notes</div>
-        <ChordButtons />
+        { data && <ChordButtons currentScale={currentScale} currentScaleType={currentScaleType} notesPerChord={notesPerChord} chordsData={data.chordsData} doChord={doChord} />}
         <div className="sound-trigger-options">
           <label>
             <span>Play sounds on mouse-over.</span>

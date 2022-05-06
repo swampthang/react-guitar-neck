@@ -1,16 +1,19 @@
-function ChordButtons() {
+function ChordButtons({currentScale, currentScaleType, notesPerChord, chordsData, doChord}) {
 
+  const obj = chordsData[currentScaleType.replace('Scales','')]
+  console.log(obj)
+  let labelIndex = notesPerChord - 3;
+
+  console.log(currentScale, currentScaleType, chordsData)
   return (
     <div className="controller info-display-div chord-buttons">
       <p className="reset-link controller"><button>Reset guitar neck to initially loaded view</button></p>
       <div className="button-wrapper controller">
-        <div className="chordButton active" scaleint="1">C</div>
-        <div className="chordButton" scaleint="2">D<sup>m</sup></div>
-        <div className="chordButton" scaleint="3">E<sup>m</sup></div>
-        <div className="chordButton" scaleint="4">F</div>
-        <div className="chordButton" scaleint="5">G</div>
-        <div className="chordButton" scaleint="6">A<sup>m</sup></div>
-        <div className="chordButton" scaleint="7">B<sup>dim</sup></div>
+        {
+          obj.map((data, i) => (
+            <div onClick={() => { doChord({chordRoot: currentScale[i], ints: data.ints})}} key={i} className="chordButton" scaleint={i+1}>{currentScale[i]}<sup>{data.labels[labelIndex]}</sup></div>
+          ))
+        }
       </div>
     </div>
   )
