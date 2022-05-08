@@ -14,14 +14,14 @@
   position: absolute;
   top: 5px;
   right: 5px;
-  border: 1px solid #cccccc;
+  border: 1px solid #aaaaaa;
   border-radius: 3px;
   padding: 5px;
   z-index: 3000;
   text-align: center;
   width: 55px;
   line-height: 1.0em;
-  background: #000000;
+  background: #f8f8f8;
   font-size: 0.9em;
   font-weight: bold;
 }
@@ -47,8 +47,10 @@
 .guitar-module-main-wrapper .controls-toggler span {
   display: block;
   cursor: pointer;
-  color: white;
+  color: #5a5a5a;
 }
+
+.guitar-module-main-wrapper .controls-toggler span.show-controls { display: none; }
 
 .guitar-module-main-wrapper .string1,
 .guitar-module-main-wrapper .string2,
@@ -104,8 +106,9 @@
 .long-neck-default .guitar-module-main-wrapper .note.fret19 { left: 1258px; }
 .long-neck-default .guitar-module-main-wrapper .note.fret20 { left: 1322px; }
 .long-neck-default .guitar-module-main-wrapper .note.fret21 { left: 1388px; }
-.long-neck-default .guitar-module-main-wrapper .note.muted { opacity: .2; }
-.long-neck-default .guitar-module-main-wrapper .note.hidden { display: none; }
+.long-neck-default .guitar-module-main-wrapper .note.muted { opacity: .2; cursor: default; }
+.long-neck-default .guitar-module-main-wrapper .note.hidden,
+.long-neck-default .guitar-module-main-wrapper .note.string-hide { display: none; }
 
 .long-neck-default .guitar-module-main-wrapper .note .int-num {
   display: none;
@@ -208,6 +211,19 @@
 .info-display-div h4 {
   display: inline-block;
   margin-right: 3px;
+}
+
+.notesPerChord {
+  margin-right: 2px;
+}
+
+.notesPerChord:last-child {
+  margin-right: 0;
+}
+
+.notes-per-chord-button.active {
+  background: green;
+  color: white;
 }
 
 /* Color settings for chord interval notes in grid when viewing a chord/arpeggio */

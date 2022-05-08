@@ -1,12 +1,15 @@
 function TopControls({currentScale, lowFret, lowFretChange, topFret, topFretChange, toggleNoteNumbers, setNotesPerChord, doChord}) {
 
   const handleNotesPerChordBtnClick = (e) => {
-    e.target.parentNode.querySelectorAll('notes-per-chord-button').forEach((btn) => {
-      btn.classList.remove('active')
+    let t = e.target.getAttribute('ctype');
+    e.target.parentNode.parentNode.querySelectorAll('.notes-per-chord-button').forEach((btn) => {
+      if( btn.getAttribute('ctype') !== t ) {
+        btn.classList.remove('active')
+      }
     })
     e.target.classList.add('active')
-    setNotesPerChord(e.target.getAttribute('ctype'))
-    // doChord()
+    setNotesPerChord(t)
+    doChord({notesPerChord: t})
   }
   return (
     <div className="top-wrapper info-display-div">
@@ -20,16 +23,17 @@ function TopControls({currentScale, lowFret, lowFretChange, topFret, topFretChan
       </ul>
     </div>
     <div className="controller" id="info">Fret range: {lowFret} to {topFret}</div>
-      <div className="controller" id="fretselectors">Set lowest fret: 
-        <select id="lowfret" defaultValue={lowFret} onChange={(e) => { lowFretChange(e.target.value) }}>
+      <div className="controller" id="fretselectors">
+        <span>Lowest fret: </span>
+        <select className="mr-10" id="lowFret" defaultValue={lowFret} onChange={(e) => { lowFretChange(e.target.value) }}>
           <>        
             {Array.apply(0, Array(21)).map(function (x, i) {
               return <option key={i} value={i}>{i}</option>
             })}
           </>
         </select>
-        <span>Set highest fret: </span>
-        <select id="highfret" defaultValue={topFret} onChange={(e) => { topFretChange(e.target.value) }}>
+        <span>Highest fret: </span>
+        <select id="topFret" defaultValue={topFret} onChange={(e) => { topFretChange(e.target.value) }}>
           <>        
             {Array.apply(1, Array(22)).map(function (x, i) {
               return <option key={i} value={i}>{i}</option>
@@ -45,10 +49,10 @@ function TopControls({currentScale, lowFret, lowFretChange, topFret, topFretChan
         <button onClick={handleNotesPerChordBtnClick} className="notes-per-chord-button active" ctype="3">basic chords</button>
       </div>
       <div className="notesPerChord">
-        <button className="notes-per-chord-button" ctype="4">7th chords</button>
+        <button onClick={handleNotesPerChordBtnClick} className="notes-per-chord-button" ctype="4">7th chords</button>
       </div>
       <div className="notesPerChord">
-        <button className="notes-per-chord-button" ctype="5">9th chords</button>
+        <button onClick={handleNotesPerChordBtnClick} className="notes-per-chord-button" ctype="5">9th chords</button>
       </div>
     </div>
     <div id="color_key">

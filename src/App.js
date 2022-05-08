@@ -23,8 +23,8 @@ function App() {
           showIntervalColorKey: true,
           neckStyleClass: 'long-neck-default',
           totalFrets: 21,
-          topfret: 17,
-          lowfret:5,
+          topFret: 17,
+          lowFret:5,
           currentScaleType: 'majorScales',
           currentScale: ["D", "E", "F#", "G", "A", "B", "C#"]
           }} />

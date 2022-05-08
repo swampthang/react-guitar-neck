@@ -10,8 +10,6 @@ import TopControls from './TopControls'
 
 function NeckModule({prefs}) {
 
-  console.log(prefs)
-
   const url = 'http://localhost:3000/data'
   const [rootNote, setRootNote] = useState(prefs.rootNote ? prefs.rootNote : 'C')
   const [topFret, setTopFret] = useState(prefs.topFret ? prefs.topFret : 21)
@@ -22,9 +20,10 @@ function NeckModule({prefs}) {
   const [data, setData] = useState(null)
   const [keyHasChanged, setKeyHasChanged] = useState(false)
   const [scaleNeedsUpdate, setScaleNeedsUpdate] = useState(false)
+  const [showingNumbers, setShowingNumbers] = useState(false)
   const [notes, setNotes] = useState(data ? data.notes : [])
-  const [showScaleOnly, setShowScaleOnly] = useState(true)
-  const [notesPerChord, setNotesPerChord] = useState(5)
+  const [showScaleOnly, setShowScaleOnly] = useState(false)
+  const [notesPerChord, setNotesPerChord] = useState(3)
   const [currentScaleType, setCurrentScaleType] = useState(prefs.currentScaleType ? prefs.currentScaleType : 'majorScales')
   const [currentScale, setCurrentScale] = useState(prefs.currentScale ? prefs.currentScale : ["C", "D", "E", "F", "G", "A", "B"])
 
@@ -36,7 +35,7 @@ function NeckModule({prefs}) {
         setCurrentScale(currentScale => (data.majorScales[rootNote]))
       break;
       case 'naturalMinorScales':
-      case 'Harmonic Minor':
+      case 'Natural Minor':
         setCurrentScale(currentScale => (data.naturalMinorScales[rootNote]))
       break;
       case 'harmonicMinorScales':
@@ -44,11 +43,9 @@ function NeckModule({prefs}) {
         setCurrentScale(currentScale => (data.harmonicMinorScales[rootNote]))
       break;
     }
-    
-    console.log(currentScale); 
   }
   
-  const handleKeychange = ({note, type}) => {
+  const handleKeyChange = ({note, type}) => {
 
     setRootNote(note)
     setCurrentScaleType(type)
@@ -61,63 +58,133 @@ function NeckModule({prefs}) {
     setKeyHasChanged(true)
   }
 
-  const doChord = ({chordRoot,ints}) => {
-    // currentScale is known
-    // notesPerChord is known
+  const autoInitChord = () => {
+    doChord()
+  }
+
+  const doChord = (obj) => {
+
+    // if obj contains a notesPerChord val, use it instead of the notesPerChord state val
+    let nps = notesPerChord;
     // ints is the array of notes to be picked from the currentScale
-    console.log(currentScale)
-    console.log(notesPerChord)
-    console.log(chordRoot)
-    console.log(ints)
+    let chordRoot = currentScaleType.replace('Scales',''),
+        ints = data.chordsData[chordRoot][0].ints;
+    if( obj ) {
+      chordRoot = obj.chordRoot === undefined ? currentScaleType.replace('Scales','') : obj.chordRoot;
+      ints = obj.ints === undefined ? data.chordsData[chordRoot][0].ints : obj.ints;
+      nps = obj.notesPerChord ? obj.notesPerChord : nps;
+    }
+
     if( data.notes ) {
       // first mute em all
       document.querySelectorAll('.note.in-scale').forEach((note) => {
+        let stringHide = note.classList.contains('string-hide');
         note.className = note.className.split('in-scale')[0] + 'note';
         note.classList.add('muted');
         note.classList.add('in-scale');
+        if( stringHide ) note.classList.add('string-hide')
       })
       let int = 1;
-      for( let i = 0; i < notesPerChord; i++ ) {
+      for( let i = 0; i < nps; i++ ) {
 
         let notename = currentScale[ints[i]];
 
-        document.querySelectorAll(`.note[notename="${notename}"`).forEach((note) => {
+        // eslint-disable-next-line no-loop-func
+        document.querySelectorAll(`.note[notename="${notename}"`).forEach(note => {
+          let fret = parseInt(note.getAttribute('fret'));
           note.classList.add(`int-${int}`)
           note.querySelector('span.int-num').textContent = int;
-          note.classList.remove('muted')
+          if( fret >= lowFret && fret <= topFret ) {
+            note.classList.remove('muted')
+          }
+
         })
         int += 2;
       }
     }
+    if(showingNumbers) showInts()
+  }
+
+  const showInts = ()=> {
+    const noteDivs = document.querySelectorAll(`#${data.myContainer} .note`)
+    noteDivs.forEach((note) => {
+      note.classList.add('hide-names')
+      note.classList.remove('hide-ints')
+    })
+    setShowingNumbers(true)
+  }
+
+  const hideInts = ()=> {
+    const noteDivs = document.querySelectorAll(`#${data.myContainer} .note`)
+    noteDivs.forEach((note) => {
+      note.classList.add('hide-ints')
+      note.classList.remove('hide-names')
+    })
+    setShowingNumbers(false)
   }
 
   const doNotes = () => {
-    console.log(currentScale);
-    console.log(rootNote)
+
+    const notesArr = document.querySelectorAll('.note');
+
     if( data.notes ) {
-      setNotes(() => {
-        return data.notes.map( (note) => {
+      if( notesArr.length ) {
+        notesArr.forEach( note => {
+          let stringHide = note.classList.contains('string-hide');
           note.className = note.className.split('note')[0] + 'note';
-          if( includes(currentScale, note.notename) ) {
-            if( currentScale.indexOf(note.notename)+1 == 2 ) {
+          let notename = note.getAttribute('notename');
+          if( includes(currentScale, notename) ) {
+            if( currentScale.indexOf(notename)+1 === 2 ) {
               note.className += ` in-scale int-9`;
             } else {
-              note.className += ` in-scale int-${currentScale.indexOf(note.notename)+1}`;
+              note.className += ` in-scale int-${currentScale.indexOf(notename)+1}`;
             }
-            if( parseInt(note.fret) < lowFret || parseInt(note.fret) > topFret ) {
+            let fret = note.getAttribute('fret');
+            if( parseInt(fret) < lowFret || parseInt(fret) > topFret ) {
               note.className += ' muted';
             }
           } else {
             note.className += ' hidden';
           }
-          return note;
+          if( stringHide ) note.classList.add('string-hide')
         })
-      })
+      } else {
+        setNotes(() => {
+          return data.notes.map( (note) => {
+            note.className = note.className.split('note')[0] + 'note';
+            if( includes(currentScale, note.notename) ) {
+              if( currentScale.indexOf(note.notename)+1 === 2 ) {
+                note.className += ` in-scale int-9`;
+              } else {
+                note.className += ` in-scale int-${currentScale.indexOf(note.notename)+1}`;
+              }
+              if( parseInt(note.fret) < lowFret || parseInt(note.fret) > topFret ) {
+                note.className += ' muted';
+              }
+            } else {
+              note.className += ' hidden';
+            }
+            return note;
+          })
+        })
+      }
+    }
+  }
+
+  const setNoteDisplay = ()=> {
+    if( showScaleOnly ) {
+      doNotes()
+    } else {
+      doChord()
     }
   }
 
   const processChange = () => {
+    // setNoteDisplay();
     doNotes();
+    if( !showScaleOnly ) {
+      autoInitChord()
+    }
   }
 
   if( scaleNeedsUpdate ) {
@@ -131,35 +198,29 @@ function NeckModule({prefs}) {
   }
 
   if( fretNumsChanged ) {
-    doNotes()
+    setNoteDisplay()
     setFretNumsChanged(false)
   }
 
   const handleTopFretChange = (val) => {
     setTopFret(val)
-    console.log(val)
     setFretNumsChanged(true)
+    if(data && !scaleNeedsUpdate && !keyHasChanged && showingNumbers) showInts()
   }
 
   const handleLowFretChange = (val) => {
     setLowFret(val)
-    console.log(val)
     setFretNumsChanged(true)
+    if(data && !scaleNeedsUpdate && !keyHasChanged && showingNumbers) showInts()
   }
 
   const toggleNoteNumbers = () => {
     let noteDivs = document.querySelectorAll(`#${data.myContainer} .note`)
     if( noteDivs[0].querySelector('.int-num').offsetWidth === 0 ) {
       // hide the note-names and show the int-numbers
-      noteDivs.forEach((note) => {
-        note.classList.add('hide-names')
-        note.classList.remove('hide-ints')
-      })
+      showInts()
     } else {
-      noteDivs.forEach((note) => {
-        note.classList.add('hide-ints')
-        note.classList.remove('hide-names')
-      })
+      hideInts()
     }
   }
 
@@ -191,11 +252,17 @@ function NeckModule({prefs}) {
         </div>
         <div className="container">
           { rootNote && <div className="main_title info-display-div">Key of {rootNote} {currentScaleType.replace('Scales','').replace('Minor', ' minor')}</div> }
-          <h2 className="chord-name">{rootNote}</h2>
         </div>
-        <KeySelectors rootNote={rootNote} currentScaleType={currentScaleType}  setKey={handleKeychange}  />
+        <KeySelectors rootNote={rootNote} currentScaleType={currentScaleType}  setKey={handleKeyChange}  />
         <div className="scale-only-link-wrapper">
-          <button className="refresh-scale-link">Show entire scale</button>
+          <button onClick={ () => {
+            setShowScaleOnly(!showScaleOnly)
+            if( showScaleOnly ) {
+              doChord()
+            } else {
+              doNotes({showScale: !showScaleOnly});
+            }
+          }} className="refresh-scale-link">Toggle show entire scale</button>
         </div>
         <TopControls 
         lowFret={lowFret} 
@@ -214,7 +281,8 @@ function NeckModule({prefs}) {
             notes={notes.length ? notes : data.notes} 
             currentScale={currentScale} 
             lowFret={lowFret} 
-            topFret={topFret} 
+            topFret={topFret}
+            showingNumbers={showingNumbers}
           /> 
         }
         <div className="controller info-display-div chord-instructions">Use buttons below to display corresponding chord notes</div>

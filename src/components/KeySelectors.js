@@ -2,8 +2,6 @@ import React from "react";
 
 function KeySelectors(props) {
 
-  console.log(props);
-
   const resetOtherSelectors = (el) => {
     const wrapper = el.parentNode
     wrapper.querySelectorAll('select').forEach(sel => {
